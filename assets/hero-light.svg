@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="1000" height="360" role="img" aria-label="Kiyan Doguc. Calm surface, sharp teeth.">
+  <title>Kiyan Doguc</title>
+  <style>
+    .name { font-family: "Avenir Next Condensed", "DIN Condensed", Bahnschrift, "Roboto Condensed", "DejaVu Sans Condensed", "Arial Narrow", sans-serif; font-stretch: condensed; font-weight: 700; font-size: 84px; letter-spacing: 2px; fill: #0b2e40; }
+    .line { font-family: "Avenir Next Condensed", "DIN Condensed", Bahnschrift, "Roboto Condensed", "DejaVu Sans Condensed", "Arial Narrow", sans-serif; font-stretch: condensed; font-size: 26px; letter-spacing: 1px; fill: #0b2e40; opacity: .6; }
+    .w { fill: #02599d; }
+    .w1 { opacity: .09; animation: drift 60s linear infinite; }
+    .w2 { opacity: .18; animation: drift 44s linear infinite; }
+    .front { fill: url(#water); animation: drift 36s linear infinite; }
+    .fin { fill: #0b2e40; }
+    .shadow { fill: #0b2e40; opacity: .22; }
+    .swim { transform: translateX(560px); animation: swim 40s linear infinite; }
+
+    @keyframes drift { to { transform: translateX(-500px); } }
+    /* einmal unter der oberfläche durch, danach 10 s ruhe */
+    @keyframes swim { 0% { transform: translateX(1040px); } 75%, 100% { transform: translateX(-440px); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .w1, .w2, .front, .swim { animation: none; }
+    }
+  </style>
+  <defs>
+    <path id="shark" d="M0,8 C20,-12 70,-30 130,-32 C150,-52 166,-80 178,-100 C178,-70 184,-46 204,-30 C258,-24 300,-14 336,-6 C350,-22 366,-38 384,-52 C378,-30 374,-12 366,0 C378,14 388,30 396,46 C372,38 352,24 336,10 C300,16 258,22 222,26 C200,30 176,34 160,36 C170,50 178,64 184,80 C160,70 136,54 118,40 C80,40 34,30 0,8 Z"/>
+    <linearGradient id="water" gradientUnits="userSpaceOnUse" x1="0" y1="198" x2="0" y2="360">
+      <stop offset="0" stop-color="#dce8f1"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <filter id="soft" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="1.6"/></filter>
+    <linearGradient id="fx" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".07" stop-color="#fff"/><stop offset=".93" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="fade-x" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="360"><rect width="1000" height="360" fill="url(#fx)"/></mask>
+    <linearGradient id="dy" x1="0" y1="0" x2="0" y2="1"><stop offset="0.589" stop-color="#000"/><stop offset="0.656" stop-color="#fff"/></linearGradient><mask id="depth" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="360"><rect width="1000" height="360" fill="url(#dy)"/></mask>
+  </defs>
+
+  <text class="name" x="4" y="112" textLength="480" lengthAdjust="spacingAndGlyphs">KIYAN DOGUC</text>
+  <text class="line" x="6" y="152">calm surface. sharp teeth.</text>
+
+  <g mask="url(#fade-x)">
+    <path class="w w1" d="M0,186 C82,179 168,179 250,186 C332,193 418,193 500,186 C582,179 668,179 750,186 C832,193 918,193 1000,186 C1082,179 1168,179 1250,186 C1332,193 1418,193 1500,186 C1582,179 1668,179 1750,186 C1832,193 1918,193 2000,186 C2082,179 2168,179 2250,186 C2332,193 2418,193 2500,186 L2500,360 L0,360 Z"/>
+    <path class="w w2" d="M0,195 C82,188 168,188 250,195 C332,202 418,202 500,195 C582,188 668,188 750,195 C832,202 918,202 1000,195 C1082,188 1168,188 1250,195 C1332,202 1418,202 1500,195 C1582,188 1668,188 1750,195 C1832,202 1918,202 2000,195 C2082,188 2168,188 2250,195 C2332,202 2418,202 2500,195 L2500,360 L0,360 Z"/>
+    <g transform="translate(0 269)"><g class="swim"><use href="#shark" class="fin"/></g></g>
+    <path class="front" d="M0,204 C82,198 168,198 250,204 C332,210 418,210 500,204 C582,198 668,198 750,204 C832,210 918,210 1000,204 C1082,198 1168,198 1250,204 C1332,210 1418,210 1500,204 C1582,198 1668,198 1750,204 C1832,210 1918,210 2000,204 C2082,198 2168,198 2250,204 C2332,210 2418,210 2500,204 L2500,360 L0,360 Z"/>
+    <g mask="url(#depth)">
+      <g filter="url(#soft)">
+        <g transform="translate(0 269)"><g class="swim"><use href="#shark" class="shadow"/></g></g>
+      </g>
+    </g>
+  </g>
+</svg>
