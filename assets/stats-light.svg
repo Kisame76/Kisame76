@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 130" width="1000" height="130" role="img" aria-label="5+ years with Laravel, 3 open-source Filament plugins">
+  <title>5+ years with Laravel · 3 open-source Filament plugins</title>
+  <style>
+    .num { font-family: "Avenir Next Condensed", "DIN Condensed", Bahnschrift, "Roboto Condensed", "DejaVu Sans Condensed", "Arial Narrow", sans-serif; font-stretch: condensed; font-weight: 700; font-size: 76px; fill: #0b2e40; }
+    .label { font-family: "Avenir Next Condensed", "DIN Condensed", Bahnschrift, "Roboto Condensed", "DejaVu Sans Condensed", "Arial Narrow", sans-serif; font-stretch: condensed; font-size: 26px; letter-spacing: 2px; fill: #0b2e40; opacity: .6; }
+  </style>
+
+  <text class="num" x="4" y="92">5+</text>
+  <text class="label" x="112" y="66">YEARS WITH</text>
+  <text class="label" x="112" y="96">LARAVEL</text>
+
+  <text class="num" x="480" y="92">3</text>
+  <text class="label" x="544" y="66">OPEN-SOURCE</text>
+  <text class="label" x="544" y="96">FILAMENT PLUGINS</text>
+</svg>
