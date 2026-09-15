@@ -12,7 +12,7 @@ Software developer from Germany. I build web apps and APIs, mostly with **Larave
 
 ### Open source
 
-- [**mlx-lif-engine**](https://github.com/Kisame76/mlx-lif-engine): the whole fruit fly connectome (127,400 neurons) simulated in Apple MLX, about 213× faster than the Brian2 reference
+- [**drosophila-brain-mlx**](https://github.com/Kisame76/drosophila-brain-mlx): the published Shiu et al. fruit fly brain model (127,400 neurons, 14.7 M synapses) in Apple MLX with a custom Metal kernel, 0.29 s per biological second against 62.6 s for the Brian2 reference
 - [**filament-advanced-rich-editor**](https://github.com/Kisame76/filament-advanced-rich-editor): a drop-in RichEditor with a toolbar you arrange yourself, a media browser and a slash menu
 - [**filament-tree-table**](https://github.com/Kisame76/filament-tree-table): expandable parent/child rows for Filament tables
 - [**filament-db-table-state**](https://github.com/Kisame76/filament-db-table-state): filters, sorting and columns saved per user, across devices
