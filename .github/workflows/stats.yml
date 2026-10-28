@@ -1,0 +1,44 @@
+name: Redraw stats
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  # token_log.py on each laptop pushes data/tokens/<machine>.json; redraw right away
+  push:
+    branches: [main]
+    paths: ["data/tokens/**", scripts/build_stats.py]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stats
+  cancel-in-progress: false
+
+jobs:
+  redraw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch and draw
+        env:
+          # every number on the card is public, the built-in token is enough
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/build_stats.py
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/stats.json assets/stats-dark.svg assets/stats-light.svg
+          git diff --staged --quiet && exit 0
+          git commit -m "Redraw stats"
+          # a token push from the Mac can land while this runs
+          git pull --rebase
+          git push
