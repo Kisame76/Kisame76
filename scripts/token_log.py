@@ -4,7 +4,8 @@
 Claude Code keeps two records: lifetime totals in ~/.claude/stats-cache.json,
 and per-request usage in ~/.claude/projects/**/*.jsonl, which it deletes after
 about 30 days. The total is the stats cache plus every transcript day the cache
-has not caught up with yet.
+has not caught up with yet, counted the way /stats counts them, so each laptop
+adds exactly what its /stats shows.
 
 A ledger in ~/Library/Application Support/token-log/ remembers the highest value
 ever seen for each source, so cleaned-up transcripts never make the number drop.
@@ -12,9 +13,13 @@ Only aggregate numbers leave the machine, never log content. Every laptop
 publishes its own data/tokens/<machine>.json and the card adds them up, so the
 work and the private laptop never overwrite each other.
 
+launchd wakes the script every hour, and it pushes on the first run of each day
+that gets through. A laptop that was asleep, shut or offline catches up within
+an hour of being back.
+
     python3 scripts/token_log.py --write /tmp/tokens.json             # preview locally
     python3 scripts/token_log.py --push --machine work                # update data/tokens/work.json on GitHub
-    python3 scripts/token_log.py --install --machine work             # push every 6 hours via launchd
+    python3 scripts/token_log.py --install --machine work             # push once a day via launchd
     python3 scripts/token_log.py --uninstall
 
 Stdlib only, Python 3.9+ (runs on the /usr/bin/python3 that ships with macOS).
@@ -36,7 +41,7 @@ REPO = "Kisame76/Kisame76"
 BRANCH = "main"
 REMOTE_DIR = "data/tokens"
 LABEL = "com.kisame76.token-log"
-INTERVAL = 6 * 60 * 60
+INTERVAL = 60 * 60  # how often launchd checks; --daily keeps it to one push a day
 
 
 def support_dir(home):
@@ -51,8 +56,13 @@ def usage_total(u):
 
 
 def read_transcripts(home):
-    """{day: {all, fresh}} from Claude Code transcripts, each API response counted once."""
-    days, seen = {}, set()
+    """{day: {all, fresh}} from Claude Code transcripts.
+
+    Every logged usage block counts, as in /stats and its cache. That repeats a
+    response split over several lines, but deduplicating only the days after the
+    cache would make the total depend on when /stats last ran.
+    """
+    days = {}
     for path in glob.glob(os.path.join(home, ".claude", "projects", "**", "*.jsonl"), recursive=True):
         with open(path, encoding="utf-8", errors="ignore") as fh:
             for line in fh:
@@ -67,11 +77,6 @@ def read_transcripts(home):
                 stamp = entry.get("timestamp")
                 if not usage or not stamp:
                     continue
-                # a response with several content blocks is logged once per block
-                key = (msg.get("id"), entry.get("requestId"))
-                if key in seen:
-                    continue
-                seen.add(key)
                 every, fresh = usage_total(usage)
                 day = days.setdefault(stamp[:10], {"all": 0, "fresh": 0})
                 day["all"] += every
@@ -210,7 +215,7 @@ def install(home, machine):
     with open(plist_path(home), "wb") as fh:
         plistlib.dump({
             "Label": LABEL,
-            "ProgramArguments": [python, script, "--push", "--machine", machine],
+            "ProgramArguments": [python, script, "--push", "--daily", "--machine", machine],
             "StartInterval": INTERVAL,
             "RunAtLoad": True,
             "StandardOutPath": log,
@@ -235,7 +240,8 @@ def main(argv=None):
     ap.add_argument("--write", metavar="PATH", help="write tokens.json to PATH")
     ap.add_argument("--push", action="store_true", help=f"update {REMOTE_DIR}/<machine>.json in {REPO} via gh")
     ap.add_argument("--machine", metavar="NAME", help="name of this laptop in the repo, e.g. work or private")
-    ap.add_argument("--install", action="store_true", help="push every 6 hours via launchd")
+    ap.add_argument("--daily", action="store_true", help="do nothing if this laptop already pushed today")
+    ap.add_argument("--install", action="store_true", help="push once a day via launchd")
     ap.add_argument("--uninstall", action="store_true", help="remove the launchd job")
     ap.add_argument("--ledger", metavar="PATH", help="ledger file (default: ~/Library/Application Support/token-log)")
     args = ap.parse_args(argv)
@@ -248,14 +254,22 @@ def main(argv=None):
     if args.uninstall:
         return uninstall(home)
 
-    data = snapshot(home, args.ledger or os.path.join(support_dir(home), "ledger.json"))
+    ledger_path = args.ledger or os.path.join(support_dir(home), "ledger.json")
+    today = datetime.now().strftime("%Y-%m-%d")
+    if args.daily and load_ledger(ledger_path).get("pushed") == today:
+        return
+    data = snapshot(home, ledger_path)
     print(f"{data['total']:,} tokens ({data['fresh']:,} fresh) since {data['since']}")
     if args.write:
         os.makedirs(os.path.dirname(os.path.abspath(args.write)), exist_ok=True)
         with open(args.write, "w", encoding="utf-8") as fh:
             fh.write(as_text(data))
     if args.push:
+        # push() exits on any failure, so an offline run is simply tried again next hour
         push(data, args.machine)
+        ledger = load_ledger(ledger_path)
+        ledger["pushed"] = today
+        save_ledger(ledger, ledger_path)
 
 
 if __name__ == "__main__":
