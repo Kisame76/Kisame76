@@ -1,8 +1,7 @@
 {
-  "generated": "2026-11-27T18:22:05Z",
+  "generated": "2026-11-28T00:37:32Z",
   "contributions": {
     "days": [
-      ["2026-10-29", 77],
       ["2026-10-30", 65],
       ["2026-10-31", 13],
       ["2026-11-01", 126],
@@ -31,9 +30,10 @@
       ["2026-11-24", 73],
       ["2026-11-25", 154],
       ["2026-11-26", 110],
-      ["2026-11-27", 52]
+      ["2026-11-27", 71],
+      ["2026-11-28", 0]
     ],
-    "year": 7238,
+    "year": 7257,
     "streak": 72,
     "longest": 72
   },
@@ -46,14 +46,14 @@
     ["Python", 6.5]
   ],
   "projects": [
-    ["filament-advanced-rich-editor", 12, 9317],
-    ["filament-tree-table", 5, 13834],
-    ["filament-db-table-state", 2, 15640],
+    ["filament-advanced-rich-editor", 12, 9337],
+    ["filament-tree-table", 5, 13854],
+    ["filament-db-table-state", 2, 15669],
     ["drosophila-brain-mlx", 2, null],
     ["minato", 1, null]
   ],
   "upstream": [
-    ["filamentphp/filament", 32591, 1],
+    ["filamentphp/filament", 32592, 1],
     ["cobanov/awesome-fly", 763, 1]
   ]
 }
